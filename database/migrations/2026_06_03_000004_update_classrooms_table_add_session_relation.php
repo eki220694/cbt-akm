@@ -1,0 +1,32 @@
+<?php
+
+declare(strict_types=1);
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    public function up(): void
+    {
+        Schema::table("classrooms", function (Blueprint $table) {
+            $table->dropColumn("group_id");
+            $table->ulid("exam_session_id")->nullable()->after("name");
+
+            $table
+                ->foreign("exam_session_id")
+                ->references("id")
+                ->on("exam_sessions")
+                ->onDelete("restrict");
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table("classrooms", function (Blueprint $table) {
+            $table->dropForeign(["exam_session_id"]);
+            $table->dropColumn("exam_session_id");
+            $table->string("group_id")->nullable()->after("name");
+        });
+    }
+};

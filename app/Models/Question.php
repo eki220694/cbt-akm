@@ -1,24 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Question extends Model
 {
-    // Menentukan kolom yang boleh diisi
+    use HasFactory, HasUlids;
+
     protected $fillable = [
-        'stimulus', 
-        'content', 
-        'type', 
-        'options', 
-        'answer_key', 
-        'points'
+        "content",
+        "type",
+        "points",
+        "answer_key",
+        "options",
     ];
 
-    // Penting untuk AKM: Mengubah JSON di database menjadi Array PHP otomatis
-    protected $casts = [
-        'options' => 'array',
-        'answer_key' => 'array',
-    ];
+    protected function casts(): array
+    {
+        return [
+            "options" => "json",
+            "points" => "integer",
+        ];
+    }
 }

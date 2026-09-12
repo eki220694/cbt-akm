@@ -79,6 +79,7 @@ class QuestionResource extends Resource
                     TextInput::make("points")
                         ->label("Bobot Nilai")
                         ->numeric()
+                        ->minValue(1)
                         ->default(1)
                         ->required(),
 

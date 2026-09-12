@@ -16,7 +16,7 @@ class ExamSessionExporter extends Exporter
     public static function getColumns(): array
     {
         return [
-            ExportColumn::make("name")->label("Nama Sesi Ujian"),
+            ExportColumn::make("name")->label("Nama Sesi"),
             ExportColumn::make("start_time")->label("Jam Mulai"),
             ExportColumn::make("end_time")->label("Jam Selesai"),
         ];

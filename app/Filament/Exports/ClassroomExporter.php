@@ -16,10 +16,8 @@ class ClassroomExporter extends Exporter
     public static function getColumns(): array
     {
         return [
-            ExportColumn::make("name")->label("Nama Rombel Kelas"),
-            ExportColumn::make("examSession.name")->label(
-                "Sesi Pelaksanaan Terikat",
-            ),
+            ExportColumn::make("name")->label("Nama Kelas"),
+            ExportColumn::make("examSession.name")->label("Nama Sesi Ujian"),
         ];
     }
 

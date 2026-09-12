@@ -33,9 +33,19 @@ class ExamSessionImporter extends Importer
 
     public function resolveRecord(): ?ExamSession
     {
-        return ExamSession::firstOrNew([
+        $session = ExamSession::firstOrNew([
             "name" => trim($this->data["name"] ?? ""),
         ]);
+
+        // ponytail: format H:i saja; upgrade terima H:i:s bila template berubah.
+        $session->start_time = substr(trim($this->data["start_time"] ?? $session->start_time ?? ""), 0, 5);
+        $session->end_time = substr(trim($this->data["end_time"] ?? $session->end_time ?? ""), 0, 5);
+
+        if ($session->start_time !== "" && $session->end_time !== "" && $session->end_time < $session->start_time) {
+            throw new \Filament\Actions\Imports\Exceptions\RowImportFailedException("Jam selesai harus sama atau setelah jam mulai.");
+        }
+
+        return $session;
     }
 
     public static function getCompletedNotificationBody(Import $import): string

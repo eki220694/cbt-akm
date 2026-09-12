@@ -96,7 +96,19 @@ class ExamSessionResource extends Resource
                     ->badge()
                     ->color("danger"),
             ])
-            ->actions([EditAction::make(), DeleteAction::make()])
+            ->actions([
+                EditAction::make(),
+                DeleteAction::make()->before(function ($action, $record) {
+                    if ($record->classrooms()->exists()) {
+                        \Filament\Notifications\Notification::make()
+                            ->warning()
+                            ->title("Sesi masih dipakai")
+                            ->body("Hapus/batalkan alokasi kelas dulu sebelum hapus sesi ini.")
+                            ->send();
+                        $action->halt();
+                    }
+                }),
+            ])
             ->bulkActions([BulkActionGroup::make([DeleteBulkAction::make()])]);
     }
 

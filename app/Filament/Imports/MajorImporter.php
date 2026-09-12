@@ -32,9 +32,10 @@ class MajorImporter extends Importer
     {
         $code = Str::upper(trim($this->data["code"] ?? ""));
 
-        return Major::firstOrNew([
-            "code" => $code,
-        ]);
+        $major = Major::firstOrNew(["code" => $code]);
+        $major->name = trim($this->data["name"] ?? $major->name ?? "");
+
+        return $major;
     }
 
     public static function getCompletedNotificationBody(Import $import): string

@@ -35,7 +35,8 @@ return [
                     "https://cdn.jsdelivr.net/npm/@wiris/mathtype-tinymce6@8.2.0/plugin.min.js",
             ],
 
-            "extended_valid_elements" => "*[*]",
+            // ponytail: tanpa HTMLPurifier server-side; tambah bila render soal ke siswa publik.
+            "extended_valid_elements" => "a[href|title|target],p,br,strong/b,em/i,u,ul,ol,li,span[style],img[src|alt|width|height|style],table,thead,tbody,tr,td[colspan|rowspan|style],th[colspan|rowspan|style],sub,sup,h3,h4,blockquote,pre,code,hr",
 
             "content_style" =>
                 "body { font-family: sans-serif; font-size: 15px; transition: background-color 0.3s, color 0.3s; }",

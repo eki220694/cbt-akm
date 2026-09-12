@@ -16,11 +16,12 @@ class QuestionExporter extends Exporter
     public static function getColumns(): array
     {
         return [
-            ExportColumn::make("content")->label("Butir Pertanyaan"),
+            // ponytail: nama kolom disamakan dgn importer+template agar round-trip; tambah formatStateUsing bila perlu sanitasi formula.
+            ExportColumn::make("content")->label("Butir Soal"),
             ExportColumn::make("type")->label("Tipe Soal"),
-            ExportColumn::make("points")->label("Bobot Skor"),
-            ExportColumn::make("answer_key")->label("Kunci Utama"),
-            ExportColumn::make("options")->label("Struktur Pilihan JSON"),
+            ExportColumn::make("points")->label("Bobot Nilai"),
+            ExportColumn::make("answer_key")->label("Kunci Jawaban"),
+            ExportColumn::make("options")->label("Format Opsi JSON"),
         ];
     }
 

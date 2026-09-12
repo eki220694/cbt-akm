@@ -73,6 +73,7 @@ class ClassroomResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with("examSession"))
             ->columns([
                 Tables\Columns\TextColumn::make("name")
                     ->label("Nama Kelas")
@@ -108,12 +109,9 @@ class ClassroomResource extends Resource
                                 ->required(),
                         ])
                         ->action(function (array $data, Collection $records) {
-                            $records->each(
-                                fn(Classroom $record) => $record->update([
-                                    "exam_session_id" =>
-                                        $data["exam_session_id"],
-                                ]),
-                            );
+                            Classroom::whereIn("id", $records->modelKeys())->update([
+                                "exam_session_id" => $data["exam_session_id"],
+                            ]);
                         })
                         ->deselectRecordsAfterCompletion(),
                 ]),

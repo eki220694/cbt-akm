@@ -15,4 +15,5 @@ Route::get("/admin/templates/{module}/download", [
     "download",
 ])
     ->name("admin.templates.download")
-    ->middleware(["web"]);
+    ->middleware(["web", "auth"])
+    ->whereIn("module", ["majors", "exam_sessions", "classrooms", "questions"]);

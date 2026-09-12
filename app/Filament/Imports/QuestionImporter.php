@@ -30,11 +30,13 @@ class QuestionImporter extends Importer
             ImportColumn::make("points")
                 ->label("Bobot Nilai")
                 ->requiredMapping()
-                ->rules(["required", "integer"]),
-            ImportColumn::make("answer_key")->label("Kunci Jawaban"),
-            ImportColumn::make("options_json_format")->label(
-                "Format Opsi JSON",
-            ),
+                ->rules(["required", "integer", "min:1"]),
+            ImportColumn::make("answer_key")
+                ->label("Kunci Jawaban")
+                ->rules(["nullable", "string", "max:255"]),
+            ImportColumn::make("options_json_format")
+                ->label("Format Opsi JSON")
+                ->rules(["nullable", "json"]),
         ];
     }
 

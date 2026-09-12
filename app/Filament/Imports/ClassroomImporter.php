@@ -12,6 +12,7 @@ use Filament\Actions\Imports\Models\Import;
 
 class ClassroomImporter extends Importer
 {
+    // ponytail: tanpa cache pluck sesi; tambah static map bila import >1000 baris.
     protected static ?string $model = Classroom::class;
 
     public static function getColumns(): array

@@ -16,9 +16,9 @@ class MajorExporter extends Exporter
     public static function getColumns(): array
     {
         return [
+            // ponytail: tanpa created_at agar hasil export bisa diimpor ulang; tambah kembali bila perlu audit.
             ExportColumn::make("code")->label("Kode Jurusan"),
             ExportColumn::make("name")->label("Nama Jurusan"),
-            ExportColumn::make("created_at")->label("Tanggal Dibuat"),
         ];
     }
 

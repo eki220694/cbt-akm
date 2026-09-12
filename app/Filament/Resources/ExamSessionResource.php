@@ -11,8 +11,9 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TimePicker;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -24,47 +25,47 @@ class ExamSessionResource extends Resource
 {
     protected static ?string $model = ExamSession::class;
 
-    protected static string|BackedEnum|null $navigationIcon = "heroicon-o-clock";
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-clock';
 
-    protected static UnitEnum|string|null $navigationGroup = "Manajemen Akademik";
+    protected static UnitEnum|string|null $navigationGroup = 'Manajemen Akademik';
 
-    protected static ?string $navigationLabel = "Data Sesi";
+    protected static ?string $navigationLabel = 'Data Sesi';
 
-    protected static ?string $modelLabel = "Sesi Ujian";
+    protected static ?string $modelLabel = 'Sesi Ujian';
 
-    protected static ?string $pluralModelLabel = "Data Sesi";
+    protected static ?string $pluralModelLabel = 'Data Sesi';
 
     protected static ?int $navigationSort = 2;
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make("Detail Sesi Ujian")
+            Section::make('Detail Sesi Ujian')
                 ->description(
-                    "Atur nama dan rentang waktu durasi untuk setiap sesi pelaksanaan ujian.",
+                    'Atur nama dan rentang waktu durasi untuk setiap sesi pelaksanaan ujian.',
                 )
                 ->components([
-                    TextInput::make("name")
-                        ->label("Nama Sesi")
+                    TextInput::make('name')
+                        ->label('Nama Sesi')
                         ->required()
                         ->maxLength(100)
                         ->unique(ignoreRecord: true)
-                        ->placeholder("Contoh: Sesi 1, Sesi Pagi"),
+                        ->placeholder('Contoh: Sesi 1, Sesi Pagi'),
 
-                    TimePicker::make("start_time")
-                        ->label("Jam Mulai")
+                    TimePicker::make('start_time')
+                        ->label('Jam Mulai')
                         ->required()
                         ->seconds(false)
-                        ->placeholder("07:00"),
+                        ->placeholder('07:00'),
 
-                    TimePicker::make("end_time")
-                        ->label("Jam Selesai")
+                    TimePicker::make('end_time')
+                        ->label('Jam Selesai')
                         ->required()
                         ->seconds(false)
-                        ->placeholder("09:30")
-                        ->rules(["after_or_equal:start_time"])
+                        ->placeholder('09:30')
+                        ->rules(['after_or_equal:start_time'])
                         ->helperText(
-                            "Waktu selesai harus sama atau setelah waktu jam mulai.",
+                            'Waktu selesai harus sama atau setelah waktu jam mulai.',
                         ),
                 ])
                 ->columns(3),
@@ -75,35 +76,35 @@ class ExamSessionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make("name")
-                    ->label("Nama Sesi")
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Nama Sesi')
                     ->searchable()
                     ->sortable()
-                    ->weight("bold")
-                    ->color("primary"),
+                    ->weight('bold')
+                    ->color('primary'),
 
-                Tables\Columns\TextColumn::make("start_time")
-                    ->label("Mulai")
-                    ->time("H:i")
+                Tables\Columns\TextColumn::make('start_time')
+                    ->label('Mulai')
+                    ->time('H:i')
                     ->sortable()
                     ->badge()
-                    ->color("success"),
+                    ->color('success'),
 
-                Tables\Columns\TextColumn::make("end_time")
-                    ->label("Selesai")
-                    ->time("H:i")
+                Tables\Columns\TextColumn::make('end_time')
+                    ->label('Selesai')
+                    ->time('H:i')
                     ->sortable()
                     ->badge()
-                    ->color("danger"),
+                    ->color('danger'),
             ])
             ->actions([
                 EditAction::make(),
                 DeleteAction::make()->before(function ($action, $record) {
                     if ($record->classrooms()->exists()) {
-                        \Filament\Notifications\Notification::make()
+                        Notification::make()
                             ->warning()
-                            ->title("Sesi masih dipakai")
-                            ->body("Hapus/batalkan alokasi kelas dulu sebelum hapus sesi ini.")
+                            ->title('Sesi masih dipakai')
+                            ->body('Hapus/batalkan alokasi kelas dulu sebelum hapus sesi ini.')
                             ->send();
                         $action->halt();
                     }
@@ -115,9 +116,9 @@ class ExamSessionResource extends Resource
     public static function getPages(): array
     {
         return [
-            "index" => Pages\ListExamSessions::route("/"),
-            "create" => Pages\CreateExamSession::route("/create"),
-            "edit" => Pages\EditExamSession::route("/{record}/edit"),
+            'index' => Pages\ListExamSessions::route('/'),
+            'create' => Pages\CreateExamSession::route('/create'),
+            'edit' => Pages\EditExamSession::route('/{record}/edit'),
         ];
     }
 }

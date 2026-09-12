@@ -14,12 +14,12 @@ class Question extends Model
     use HasFactory;
 
     protected $fillable = [
-        "stimulus",
-        "content",
-        "type",
-        "points",
-        "answer_key",
-        "options",
+        'stimulus',
+        'content',
+        'type',
+        'points',
+        'answer_key',
+        'options',
     ];
 
     protected static function newFactory(): QuestionFactory
@@ -30,8 +30,8 @@ class Question extends Model
     protected function casts(): array
     {
         return [
-            "options" => "array",
-            "points" => "integer",
+            'options' => 'array',
+            'points' => 'integer',
         ];
     }
 }

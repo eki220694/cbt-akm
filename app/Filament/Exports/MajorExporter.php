@@ -17,15 +17,15 @@ class MajorExporter extends Exporter
     {
         return [
             // ponytail: tanpa created_at agar hasil export bisa diimpor ulang; tambah kembali bila perlu audit.
-            ExportColumn::make("code")->label("Kode Jurusan"),
-            ExportColumn::make("name")->label("Nama Jurusan"),
+            ExportColumn::make('code')->label('Kode Jurusan'),
+            ExportColumn::make('name')->label('Nama Jurusan'),
         ];
     }
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        return "Ekspor data jurusan selesai. " .
-            number_format($export->successful_rows) .
-            " baris berhasil diunduh.";
+        return 'Ekspor data jurusan selesai. '.
+            number_format($export->successful_rows).
+            ' baris berhasil diunduh.';
     }
 }

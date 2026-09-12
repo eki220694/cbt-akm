@@ -18,16 +18,16 @@ class ClassroomImporter extends Importer
     public static function getColumns(): array
     {
         return [
-            ImportColumn::make("name")
-                ->label("Nama Kelas")
+            ImportColumn::make('name')
+                ->label('Nama Kelas')
                 ->requiredMapping()
-                ->rules(["required", "max:255"]),
+                ->rules(['required', 'max:255']),
             // ponytail: kolom virtual, resolveRecord() isi exam_session_id manual.
-            ImportColumn::make("exam_session_name")
-                ->label("Nama Sesi Ujian")
+            ImportColumn::make('exam_session_name')
+                ->label('Nama Sesi Ujian')
                 ->requiredMapping()
-                ->rules(["required"])
-                ->fillRecordUsing(static fn() => null),
+                ->rules(['required'])
+                ->fillRecordUsing(static fn () => null),
         ];
     }
 
@@ -35,16 +35,16 @@ class ClassroomImporter extends Importer
     {
         // Hubungan pengait otomatis: mencari Sesi berdasarkan String Teks di Excel
         $session = ExamSession::where(
-            "name",
-            trim($this->data["exam_session_name"] ?? ""),
+            'name',
+            trim($this->data['exam_session_name'] ?? ''),
         )->first();
 
-        if (!$session) {
+        if (! $session) {
             return null; // Menggagalkan baris jika nama sesi tidak valid (Orphan Guard)
         }
 
         $classroom = Classroom::firstOrNew([
-            "name" => trim($this->data["name"] ?? ""),
+            'name' => trim($this->data['name'] ?? ''),
         ]);
 
         $classroom->exam_session_id = $session->id;
@@ -54,8 +54,8 @@ class ClassroomImporter extends Importer
 
     public static function getCompletedNotificationBody(Import $import): string
     {
-        return "Impor data kelas selesai. " .
-            number_format($import->successful_rows) .
-            " rombel berhasil dimasukkan.";
+        return 'Impor data kelas selesai. '.
+            number_format($import->successful_rows).
+            ' rombel berhasil dimasukkan.';
     }
 }

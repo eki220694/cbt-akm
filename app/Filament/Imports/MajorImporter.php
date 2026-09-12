@@ -17,23 +17,23 @@ class MajorImporter extends Importer
     public static function getColumns(): array
     {
         return [
-            ImportColumn::make("code")
-                ->label("Kode Jurusan")
+            ImportColumn::make('code')
+                ->label('Kode Jurusan')
                 ->requiredMapping()
-                ->rules(["required", "max:10"]),
-            ImportColumn::make("name")
-                ->label("Nama Jurusan")
+                ->rules(['required', 'max:10']),
+            ImportColumn::make('name')
+                ->label('Nama Jurusan')
                 ->requiredMapping()
-                ->rules(["required", "max:255"]),
+                ->rules(['required', 'max:255']),
         ];
     }
 
     public function resolveRecord(): ?Major
     {
-        $code = Str::upper(trim($this->data["code"] ?? ""));
+        $code = Str::upper(trim($this->data['code'] ?? ''));
 
-        $major = Major::firstOrNew(["code" => $code]);
-        $major->name = trim($this->data["name"] ?? $major->name ?? "");
+        $major = Major::firstOrNew(['code' => $code]);
+        $major->name = trim($this->data['name'] ?? $major->name ?? '');
 
         return $major;
     }
@@ -41,12 +41,13 @@ class MajorImporter extends Importer
     public static function getCompletedNotificationBody(Import $import): string
     {
         $body =
-            "Impor data jurusan selesai. " .
-            number_format($import->successful_rows) .
-            " baris berhasil.";
+            'Impor data jurusan selesai. '.
+            number_format($import->successful_rows).
+            ' baris berhasil.';
         if ($failedRowsCount = $import->getFailedRowsCount()) {
-            $body .= " " . number_format($failedRowsCount) . " baris gagal.";
+            $body .= ' '.number_format($failedRowsCount).' baris gagal.';
         }
+
         return $body;
     }
 }

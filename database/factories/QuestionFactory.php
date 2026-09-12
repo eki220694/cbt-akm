@@ -14,11 +14,11 @@ class QuestionFactory extends Factory
     public function definition(): array
     {
         return [
-            "content" => $this->faker->sentence(),
-            "type" => "pg",
-            "points" => 1,
-            "answer_key" => "A",
-            "options" => [["key" => "A", "value" => "4"], ["key" => "B", "value" => "5"]],
+            'content' => $this->faker->sentence(),
+            'type' => 'pg',
+            'points' => 1,
+            'answer_key' => 'A',
+            'options' => [['key' => 'A', 'value' => '4'], ['key' => 'B', 'value' => '5']],
         ];
     }
 }

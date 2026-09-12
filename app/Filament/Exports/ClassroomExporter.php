@@ -16,15 +16,15 @@ class ClassroomExporter extends Exporter
     public static function getColumns(): array
     {
         return [
-            ExportColumn::make("name")->label("Nama Kelas"),
-            ExportColumn::make("examSession.name")->label("Nama Sesi Ujian"),
+            ExportColumn::make('name')->label('Nama Kelas'),
+            ExportColumn::make('examSession.name')->label('Nama Sesi Ujian'),
         ];
     }
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        return "Ekspor data kelas selesai. " .
-            number_format($export->successful_rows) .
-            " baris sukses diunduh.";
+        return 'Ekspor data kelas selesai. '.
+            number_format($export->successful_rows).
+            ' baris sukses diunduh.';
     }
 }

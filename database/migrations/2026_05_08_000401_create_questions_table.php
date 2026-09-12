@@ -15,15 +15,15 @@ return new class extends Migration
             $table->id();
             $table->text('stimulus')->nullable(); // Untuk teks bacaan atau gambar stimulus AKM
             $table->text('content'); // Isi soal/pertanyaan
-        
+
             // Jenis soal: pg, essay, pg_kompleks, isian_singkat, menjodohkan
-            $table->string('type'); 
-        
+            $table->string('type');
+
             // Kolom JSON untuk menyimpan opsi (pilihan) dan kunci jawaban secara fleksibel
             $table->json('options')->nullable();
             // ponytail: kunci jawaban string skalar (A/B/C); upgrade ke JSON bila butuh multi-kunci.
             $table->string('answer_key', 255)->nullable();
-        
+
             $table->integer('points')->default(1);
             $table->timestamps();
         });

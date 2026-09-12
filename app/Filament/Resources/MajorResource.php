@@ -23,44 +23,44 @@ class MajorResource extends Resource
 {
     protected static ?string $model = Major::class;
 
-    protected static string|BackedEnum|null $navigationIcon = "heroicon-o-rectangle-stack";
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static UnitEnum|string|null $navigationGroup = "Manajemen Akademik";
+    protected static UnitEnum|string|null $navigationGroup = 'Manajemen Akademik';
 
-    protected static ?string $navigationLabel = "Data Jurusan";
+    protected static ?string $navigationLabel = 'Data Jurusan';
 
-    protected static ?string $modelLabel = "Jurusan";
+    protected static ?string $modelLabel = 'Jurusan';
 
-    protected static ?string $pluralModelLabel = "Data Jurusan";
+    protected static ?string $pluralModelLabel = 'Data Jurusan';
 
     protected static ?int $navigationSort = 1;
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make("Detail Jurusan")
+            Section::make('Detail Jurusan')
                 ->description(
-                    "Informasi dasar mengenai data program keahlian atau jurusan sekolah.",
+                    'Informasi dasar mengenai data program keahlian atau jurusan sekolah.',
                 )
                 ->components([
-                    TextInput::make("code")
-                        ->label("Kode Jurusan")
+                    TextInput::make('code')
+                        ->label('Kode Jurusan')
                         ->required()
                         ->maxLength(10)
                         ->extraInputAttributes([
-                            "style" => "text-transform: uppercase",
+                            'style' => 'text-transform: uppercase',
                         ])
                         ->unique(ignoreRecord: true)
                         ->helperText(
-                            "Maksimal 10 karakter, otomatis dikonversi ke huruf kapital.",
+                            'Maksimal 10 karakter, otomatis dikonversi ke huruf kapital.',
                         ),
 
-                    TextInput::make("name")
-                        ->label("Nama Lengkap Jurusan")
+                    TextInput::make('name')
+                        ->label('Nama Lengkap Jurusan')
                         ->required()
                         ->maxLength(255)
                         ->helperText(
-                            "Contoh: Rekayasa Perangkat Lunak atau Ilmu Pengetahuan Alam",
+                            'Contoh: Rekayasa Perangkat Lunak atau Ilmu Pengetahuan Alam',
                         ),
                 ])
                 ->columns(2),
@@ -71,15 +71,15 @@ class MajorResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make("code")
-                    ->label("Kode")
+                Tables\Columns\TextColumn::make('code')
+                    ->label('Kode')
                     ->searchable()
                     ->sortable()
                     ->badge()
-                    ->color("primary"),
+                    ->color('primary'),
 
-                Tables\Columns\TextColumn::make("name")
-                    ->label("Nama Jurusan")
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Nama Jurusan')
                     ->searchable()
                     ->sortable(),
             ])
@@ -90,9 +90,9 @@ class MajorResource extends Resource
     public static function getPages(): array
     {
         return [
-            "index" => Pages\ListMajors::route("/"),
-            "create" => Pages\CreateMajor::route("/create"),
-            "edit" => Pages\EditMajor::route("/{record}/edit"),
+            'index' => Pages\ListMajors::route('/'),
+            'create' => Pages\CreateMajor::route('/create'),
+            'edit' => Pages\EditMajor::route('/{record}/edit'),
         ];
     }
 }

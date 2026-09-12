@@ -16,16 +16,16 @@ class ExamSessionExporter extends Exporter
     public static function getColumns(): array
     {
         return [
-            ExportColumn::make("name")->label("Nama Sesi"),
-            ExportColumn::make("start_time")->label("Jam Mulai"),
-            ExportColumn::make("end_time")->label("Jam Selesai"),
+            ExportColumn::make('name')->label('Nama Sesi'),
+            ExportColumn::make('start_time')->label('Jam Mulai'),
+            ExportColumn::make('end_time')->label('Jam Selesai'),
         ];
     }
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        return "Ekspor data sesi selesai. " .
-            number_format($export->successful_rows) .
-            " data berhasil diekspor.";
+        return 'Ekspor data sesi selesai. '.
+            number_format($export->successful_rows).
+            ' data berhasil diekspor.';
     }
 }

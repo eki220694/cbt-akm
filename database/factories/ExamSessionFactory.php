@@ -14,9 +14,9 @@ class ExamSessionFactory extends Factory
     public function definition(): array
     {
         return [
-            "name" => $this->faker->unique()->words(2, true),
-            "start_time" => "07:30",
-            "end_time" => "09:30",
+            'name' => $this->faker->unique()->words(2, true),
+            'start_time' => '07:30',
+            'end_time' => '09:30',
         ];
     }
 }

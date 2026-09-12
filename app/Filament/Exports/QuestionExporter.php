@@ -17,18 +17,18 @@ class QuestionExporter extends Exporter
     {
         return [
             // ponytail: nama kolom disamakan dgn importer+template agar round-trip; tambah formatStateUsing bila perlu sanitasi formula.
-            ExportColumn::make("content")->label("Butir Soal"),
-            ExportColumn::make("type")->label("Tipe Soal"),
-            ExportColumn::make("points")->label("Bobot Nilai"),
-            ExportColumn::make("answer_key")->label("Kunci Jawaban"),
-            ExportColumn::make("options")->label("Format Opsi JSON"),
+            ExportColumn::make('content')->label('Butir Soal'),
+            ExportColumn::make('type')->label('Tipe Soal'),
+            ExportColumn::make('points')->label('Bobot Nilai'),
+            ExportColumn::make('answer_key')->label('Kunci Jawaban'),
+            ExportColumn::make('options')->label('Format Opsi JSON'),
         ];
     }
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        return "Ekspor Bank Soal sukses. Berhasil memindahkan " .
-            number_format($export->successful_rows) .
-            " butir soal.";
+        return 'Ekspor Bank Soal sukses. Berhasil memindahkan '.
+            number_format($export->successful_rows).
+            ' butir soal.';
     }
 }

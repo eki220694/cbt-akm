@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\MajorFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
-use Database\Factories\MajorFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,7 +14,7 @@ class Major extends Model
 {
     use HasFactory, HasUlids;
 
-    protected $fillable = ["code", "name"];
+    protected $fillable = ['code', 'name'];
 
     /**
      * Edge Case Guard: Memastikan kode jurusan selalu disimpan dalam huruf kapital murni
@@ -27,7 +27,7 @@ class Major extends Model
     protected function code(): Attribute
     {
         return Attribute::make(
-            set: fn(string $value) => strtoupper(trim($value)),
+            set: fn (string $value) => strtoupper(trim($value)),
         );
     }
 }

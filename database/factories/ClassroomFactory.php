@@ -15,8 +15,8 @@ class ClassroomFactory extends Factory
     public function definition(): array
     {
         return [
-            "name" => $this->faker->unique()->bothify("XII-?-#"),
-            "exam_session_id" => ExamSession::factory(),
+            'name' => $this->faker->unique()->bothify('XII-?-#'),
+            'exam_session_id' => ExamSession::factory(),
         ];
     }
 }

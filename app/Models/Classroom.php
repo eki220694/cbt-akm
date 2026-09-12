@@ -14,7 +14,7 @@ class Classroom extends Model
 {
     use HasFactory, HasUlids;
 
-    protected $fillable = ["name", "exam_session_id"];
+    protected $fillable = ['name', 'exam_session_id'];
 
     protected static function newFactory(): ClassroomFactory
     {
@@ -23,6 +23,6 @@ class Classroom extends Model
 
     public function examSession(): BelongsTo
     {
-        return $this->belongsTo(ExamSession::class, "exam_session_id");
+        return $this->belongsTo(ExamSession::class, 'exam_session_id');
     }
 }

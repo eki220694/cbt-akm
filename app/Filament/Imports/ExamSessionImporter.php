@@ -38,10 +38,12 @@ class ExamSessionImporter extends Importer
         ]);
 
         // ponytail: format H:i saja; upgrade terima H:i:s bila template berubah.
-        $session->start_time = substr(trim($this->data["start_time"] ?? $session->start_time ?? ""), 0, 5);
-        $session->end_time = substr(trim($this->data["end_time"] ?? $session->end_time ?? ""), 0, 5);
+        $start = \DateTime::createFromFormat("H:i", trim($this->data["start_time"] ?? ""));
+        $end = \DateTime::createFromFormat("H:i", trim($this->data["end_time"] ?? ""));
+        $session->start_time = $start ? $start->format("H:i") : trim($this->data["start_time"] ?? "");
+        $session->end_time = $end ? $end->format("H:i") : trim($this->data["end_time"] ?? "");
 
-        if ($session->start_time !== "" && $session->end_time !== "" && $session->end_time < $session->start_time) {
+        if ($start && $end && $end < $start) {
             throw new \Filament\Actions\Imports\Exceptions\RowImportFailedException("Jam selesai harus sama atau setelah jam mulai.");
         }
 

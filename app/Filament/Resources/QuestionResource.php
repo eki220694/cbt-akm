@@ -58,7 +58,8 @@ class QuestionResource extends Resource
                         ->required()
                         ->columnSpanFull()
                         ->profile("default")
-                        ->language("id"),
+                        ->language("id")
+                        ->maxLength(10000),
                 ]),
 
             Section::make("Konfigurasi Jawaban & Skor")
@@ -122,6 +123,7 @@ class QuestionResource extends Resource
 
                     TextInput::make("answer_key")
                         ->label("Kunci Jawaban Utama")
+                        ->maxLength(255)
                         ->visible(
                             fn(Get $get): bool => !in_array($get("type"), [
                                 "essay",

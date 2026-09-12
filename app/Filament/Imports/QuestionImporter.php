@@ -33,10 +33,13 @@ class QuestionImporter extends Importer
                 ->rules(["required", "integer", "min:1"]),
             ImportColumn::make("answer_key")
                 ->label("Kunci Jawaban")
-                ->rules(["nullable", "string", "max:255"]),
+                ->rules(["nullable", "string", "max:255"])
+                ->ignoreBlankState(true),
+            // ponytail: kolom virtual, resolveRecord() isi manual; tambah cast array bila format berubah.
             ImportColumn::make("options_json_format")
                 ->label("Format Opsi JSON")
-                ->rules(["nullable", "json"]),
+                ->rules(["nullable", "json"])
+                ->fillRecordUsing(static fn() => null),
         ];
     }
 

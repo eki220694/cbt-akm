@@ -22,10 +22,12 @@ class ClassroomImporter extends Importer
                 ->label("Nama Kelas")
                 ->requiredMapping()
                 ->rules(["required", "max:255"]),
+            // ponytail: kolom virtual, resolveRecord() isi exam_session_id manual.
             ImportColumn::make("exam_session_name")
                 ->label("Nama Sesi Ujian")
                 ->requiredMapping()
-                ->rules(["required"]),
+                ->rules(["required"])
+                ->fillRecordUsing(static fn() => null),
         ];
     }
 

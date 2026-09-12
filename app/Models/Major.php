@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Database\Factories\MajorFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,6 +19,11 @@ class Major extends Model
     /**
      * Edge Case Guard: Memastikan kode jurusan selalu disimpan dalam huruf kapital murni
      */
+    protected static function newFactory(): MajorFactory
+    {
+        return MajorFactory::new();
+    }
+
     protected function code(): Attribute
     {
         return Attribute::make(

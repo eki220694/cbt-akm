@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\ClassroomFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +15,11 @@ class Classroom extends Model
     use HasFactory, HasUlids;
 
     protected $fillable = ["name", "exam_session_id"];
+
+    protected static function newFactory(): ClassroomFactory
+    {
+        return ClassroomFactory::new();
+    }
 
     public function examSession(): BelongsTo
     {

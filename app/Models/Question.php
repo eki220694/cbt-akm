@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\QuestionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,6 +21,11 @@ class Question extends Model
         "answer_key",
         "options",
     ];
+
+    protected static function newFactory(): QuestionFactory
+    {
+        return QuestionFactory::new();
+    }
 
     protected function casts(): array
     {

@@ -9,6 +9,7 @@ use Database\Factories\QuestionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Question extends Model
 {
@@ -32,6 +33,11 @@ class Question extends Model
     public function examSessions(): BelongsToMany
     {
         return $this->belongsToMany(ExamSession::class);
+    }
+
+    public function studentAnswers(): HasMany
+    {
+        return $this->hasMany(StudentAnswer::class);
     }
 
     protected function casts(): array

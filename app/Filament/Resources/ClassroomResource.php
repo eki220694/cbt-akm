@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Filament\Concerns\RestrictsByRole;
 use App\Filament\Resources\ClassroomResource\Pages;
 use App\Models\Classroom;
 use App\Models\ExamSession;
@@ -25,6 +26,10 @@ use UnitEnum;
 
 class ClassroomResource extends Resource
 {
+    use RestrictsByRole;
+
+    protected static string $guruAccess = 'none';
+
     protected static ?string $model = Classroom::class;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-building-office-2';

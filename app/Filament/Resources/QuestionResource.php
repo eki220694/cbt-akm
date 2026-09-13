@@ -6,6 +6,7 @@ namespace App\Filament\Resources;
 
 use AmidEsfahani\FilamentTinyEditor\TinyEditor;
 use App\Enums\QuestionType;
+use App\Filament\Concerns\RestrictsByRole;
 use App\Filament\Resources\QuestionResource\Pages;
 use App\Models\Question;
 use BackedEnum;
@@ -27,6 +28,10 @@ use UnitEnum;
 
 class QuestionResource extends Resource
 {
+    use RestrictsByRole;
+
+    protected static string $guruAccess = 'full';
+
     protected static ?string $model = Question::class;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-document-text';

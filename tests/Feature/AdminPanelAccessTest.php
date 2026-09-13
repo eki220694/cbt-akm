@@ -10,24 +10,24 @@ class AdminPanelAccessTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_siswa_cannot_access_admin_panel(): void
+    public function test_guru_can_access_admin_panel(): void
     {
-        $user = User::factory()->create(['role' => 'siswa']);
+        $user = User::factory()->guru()->create();
 
-        $this->actingAs($user)->get('/admin')->assertForbidden();
+        $this->actingAs($user)->get('/admin')->assertOk();
     }
 
     public function test_admin_can_access_admin_panel(): void
     {
-        $user = User::factory()->create(['role' => 'admin']);
+        $user = User::factory()->admin()->create();
 
         $this->actingAs($user)->get('/admin')->assertOk();
     }
 
-    public function test_guru_can_access_admin_panel(): void
+    public function test_inactive_user_cannot_access_admin_panel(): void
     {
-        $user = User::factory()->create(['role' => 'guru']);
+        $user = User::factory()->admin()->inactive()->create();
 
-        $this->actingAs($user)->get('/admin')->assertOk();
+        $this->actingAs($user)->get('/admin')->assertForbidden();
     }
 }

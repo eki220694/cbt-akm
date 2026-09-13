@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Filament\Concerns\RestrictsByRole;
 use App\Filament\Resources\ExamSessionResource\Pages;
 use App\Models\ExamSession;
 use BackedEnum;
@@ -23,6 +24,10 @@ use UnitEnum;
 
 class ExamSessionResource extends Resource
 {
+    use RestrictsByRole;
+
+    protected static string $guruAccess = 'view';
+
     protected static ?string $model = ExamSession::class;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-clock';

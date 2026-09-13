@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Filament\Concerns\RestrictsByRole;
 use App\Filament\Resources\SubjectResource\Pages;
 use App\Models\Subject;
 use BackedEnum;
@@ -21,6 +22,10 @@ use UnitEnum;
 
 class SubjectResource extends Resource
 {
+    use RestrictsByRole;
+
+    protected static string $guruAccess = 'full';
+
     protected static ?string $model = Subject::class;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-book-open';

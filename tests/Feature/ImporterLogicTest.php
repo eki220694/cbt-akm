@@ -35,7 +35,7 @@ class ImporterLogicTest extends TestCase
 
     public function test_template_download_terbuka_setelah_login(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->inactive()->create();
 
         // ponytail: Filament Authenticate 403 bila user tak punya akses panel; cukup pastikan bukan redirect login.
         foreach (['majors', 'exam_sessions', 'classrooms', 'questions'] as $module) {

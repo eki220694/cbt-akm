@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Filament\Concerns\RestrictsByRole;
 use App\Filament\Resources\MajorResource\Pages;
 use App\Models\Major;
 use BackedEnum;
@@ -21,6 +22,10 @@ use UnitEnum;
 
 class MajorResource extends Resource
 {
+    use RestrictsByRole;
+
+    protected static string $guruAccess = 'none';
+
     protected static ?string $model = Major::class;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';

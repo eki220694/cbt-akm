@@ -11,6 +11,7 @@ enum QuestionType: string
     case IsianSingkat = 'isian_singkat';
     case Essay = 'essay';
     case Menjodohkan = 'menjodohkan';
+    case BenarSalah = 'benar_salah';
 
     public function label(): string
     {
@@ -20,6 +21,7 @@ enum QuestionType: string
             self::IsianSingkat => 'Isian Singkat',
             self::Essay => 'Essay/Uraian',
             self::Menjodohkan => 'Menjodohkan',
+            self::BenarSalah => 'Benar Salah',
         };
     }
 }

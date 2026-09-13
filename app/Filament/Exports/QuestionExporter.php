@@ -18,6 +18,7 @@ class QuestionExporter extends Exporter
         return [
             ExportColumn::make('stimulus')->label('Stimulus/Bacaan'),
             ExportColumn::make('content')->label('Butir Soal'),
+            ExportColumn::make('subject.code')->label('Kode Mapel'),
             ExportColumn::make('type')->label('Tipe Soal'),
             ExportColumn::make('points')->label('Bobot Nilai'),
             ExportColumn::make('answer_key')->label('Kunci Jawaban'),

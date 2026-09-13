@@ -63,6 +63,14 @@ class TemplateDownloadController extends Controller
                     'exam_session_name' => 'Sesi 1',
                 ]),
 
+            'subjects' => SimpleExcelWriter::streamDownload(
+                'template_mapel.xlsx',
+            )
+                ->addHeader(['code', 'name'])
+                ->addRow(['code' => 'MTK', 'name' => 'Matematika'])
+                ->addRow(['code' => 'IPA', 'name' => 'Ilmu Pengetahuan Alam'])
+                ->addRow(['code' => 'BID', 'name' => 'Bahasa Indonesia']),
+
             'questions' => SimpleExcelWriter::streamDownload(
                 'template_soal_akm.xlsx',
             )
@@ -72,6 +80,7 @@ class TemplateDownloadController extends Controller
                     'type',
                     'points',
                     'answer_key',
+                    'subject_code',
                     'options_json_format',
                 ])
                 ->addRow([
@@ -80,6 +89,7 @@ class TemplateDownloadController extends Controller
                     'type' => 'pg',
                     'points' => 1,
                     'answer_key' => 'A',
+                    'subject_code' => 'MTK',
                     'options_json_format' => '[{"key":"A","value":"4"},{"key":"B","value":"5"}]',
                 ])
                 ->addRow([
@@ -88,6 +98,7 @@ class TemplateDownloadController extends Controller
                     'type' => 'essay',
                     'points' => 2,
                     'answer_key' => null,
+                    'subject_code' => null,
                     'options_json_format' => null,
                 ]),
 

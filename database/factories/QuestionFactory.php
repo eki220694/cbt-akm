@@ -22,4 +22,13 @@ class QuestionFactory extends Factory
             'options' => [['key' => 'A', 'value' => '4'], ['key' => 'B', 'value' => '5']],
         ];
     }
+
+    public function benarSalah(): static
+    {
+        return $this->state(fn (array $attrs): array => [
+            'type' => QuestionType::BenarSalah,
+            'answer_key' => 'Benar',
+            'options' => [['key' => 'Benar', 'value' => 'Benar'], ['key' => 'Salah', 'value' => 'Salah']],
+        ]);
+    }
 }

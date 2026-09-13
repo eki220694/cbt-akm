@@ -13,7 +13,7 @@ $COMPOSER install --no-dev --prefer-dist --no-interaction --optimize-autoloader
 npm ci
 npm run build
 rm -rf "$CACHE" && mkdir -p "$CACHE"
-PKGS="php8.3-cli php8.3-sqlite3 php8.3-xml php8.3-mbstring php8.3-curl php8.3-zip php8.3-intl php8.3-bcmath sqlite3"
+PKGS="php8.3-cli php8.3-mysql php8.3-sqlite3 php8.3-xml php8.3-mbstring php8.3-curl php8.3-zip php8.3-intl php8.3-bcmath mysql-server sqlite3"
 sudo apt-get update
 DEPS=$(apt-cache depends --recurse --no-recommends --no-suggests --no-conflicts --no-breaks --no-replaces --no-enhances $PKGS | grep -oP '^\s*Depends: \K[^<>]+' | tr -d ' ' | sort -u | tr '\n' ' ')
 (cd "$CACHE" && apt-get download $DEPS)

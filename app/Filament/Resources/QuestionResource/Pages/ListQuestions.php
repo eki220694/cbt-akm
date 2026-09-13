@@ -39,7 +39,7 @@ class ListQuestions extends ListRecords
                 ->importer(QuestionImporter::class)
                 ->modalHeading('Impor Butir Soal AKM Massal')
                 ->modalDescription(
-                    'Pilihan tipe wajib diisi: pg, pg_kompleks, isian_singkat, essay, atau menjodohkan.',
+                    'Pilihan tipe wajib diisi: pg, pg_kompleks, isian_singkat, essay, menjodohkan, atau benar_salah.',
                 ),
 
             ExportAction::make('exportData')

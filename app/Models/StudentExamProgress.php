@@ -15,15 +15,19 @@ class StudentExamProgress extends Model
 
     protected $table = 'student_exam_progress';
 
+    // status: not_started|in_progress|finished|late (+ lawas: started=selesai jalan)
     protected $fillable = [
         'student_id', 'exam_session_id', 'session_token',
         'status', 'score', 'started_at', 'finished_at',
+        'order_seed', 'remaining_seconds',
     ];
 
     protected function casts(): array
     {
         return [
             'score' => 'integer',
+            'order_seed' => 'integer',
+            'remaining_seconds' => 'integer',
             'started_at' => 'datetime',
             'finished_at' => 'datetime',
         ];

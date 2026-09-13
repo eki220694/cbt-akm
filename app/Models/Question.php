@@ -8,6 +8,7 @@ use App\Enums\QuestionType;
 use Database\Factories\QuestionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -20,14 +21,21 @@ class Question extends Model
         'stimulus',
         'content',
         'type',
+        'subject_id',
         'points',
         'answer_key',
+        'answer_keys_json',
         'options',
     ];
 
     protected static function newFactory(): QuestionFactory
     {
         return QuestionFactory::new();
+    }
+
+    public function subject(): BelongsTo
+    {
+        return $this->belongsTo(Subject::class);
     }
 
     public function examSessions(): BelongsToMany
@@ -45,6 +53,7 @@ class Question extends Model
         return [
             'type' => QuestionType::class,
             'options' => 'array',
+            'answer_keys_json' => 'array',
             'points' => 'integer',
         ];
     }

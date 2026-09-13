@@ -17,7 +17,7 @@ Route::get('/admin/templates/{module}/download', [
 ])
     ->name('admin.templates.download')
     ->middleware(['web', Authenticate::class])
-    ->whereIn('module', ['majors', 'exam_sessions', 'classrooms', 'questions']);
+    ->whereIn('module', ['majors', 'exam_sessions', 'classrooms', 'questions', 'subjects']);
 
 // Cetak PDF (butuh login panel admin)
 use App\Http\Controllers\CetakController;

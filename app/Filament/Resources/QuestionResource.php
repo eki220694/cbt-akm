@@ -77,6 +77,13 @@ class QuestionResource extends Resource
 
             Section::make('Konfigurasi Jawaban & Skor')
                 ->components([
+                    Select::make('subject_id')
+                        ->label('Mata Pelajaran')
+                        ->relationship('subject', 'name')
+                        ->searchable()
+                        ->preload()
+                        ->nullable(),
+
                     Select::make('type')
                         ->label('Tipe Soal AKM')
                         ->options(collect(QuestionType::cases())->mapWithKeys(fn (QuestionType $c): array => [$c->value => $c->label()]))
@@ -103,6 +110,7 @@ class QuestionResource extends Resource
                                 'pg',
                                 'pg_kompleks',
                                 'menjodohkan',
+                                'benar_salah',
                             ]),
                         )
                         ->schema(
@@ -158,6 +166,13 @@ class QuestionResource extends Resource
                         fn (string $state): string => strip_tags($state),
                     )
                     ->limit(80),
+                Tables\Columns\TextColumn::make('subject.name')
+                    ->label('Mapel')
+                    ->badge()
+                    ->color('info')
+                    ->searchable()
+                    ->sortable()
+                    ->default('-'),
                 Tables\Columns\TextColumn::make('points')->label('Bobot'),
             ])
             ->actions([EditAction::make(), DeleteAction::make()])

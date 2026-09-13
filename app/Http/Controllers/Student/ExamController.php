@@ -23,6 +23,20 @@ class ExamController extends Controller
             ->firstOrFail();
     }
 
+    /** Acak deterministik via seed (Fisher-Yates, mt_rand). */
+    private function shuffled(array $items, int $seed): array
+    {
+        mt_srand($seed);
+        $n = count($items);
+        for ($i = $n - 1; $i > 0; $i--) {
+            $j = mt_rand(0, $i);
+            [$items[$i], $items[$j]] = [$items[$j], $items[$i]];
+        }
+        mt_srand();
+
+        return $items;
+    }
+
     public function take(Request $request, int $progress): View|RedirectResponse
     {
         $p = $this->owned($progress);
@@ -33,17 +47,43 @@ class ExamController extends Controller
             abort(403, 'Token sesi tidak valid.');
         }
 
-        if ($p->status === 'finished') {
+        if (in_array($p->status, ['finished', 'late'], true)) {
             return redirect()->route('student.exam.result', $p->id);
         }
 
-        // Timer sederhana: 60 menit dari started_at.
-        $secondsLeft = 3600 - (int) (now()->diffInSeconds($p->started_at ?? now(), false) > 0 ? now()->diffInSeconds($p->started_at) : 0);
-        $secondsLeft = max(0, $secondsLeft);
+        // Seed acak: buat sekali, pakai ulang agar urutan stabil.
+        if ($p->order_seed === null) {
+            $p->order_seed = random_int(1, 2147483647);
+        }
+        // not_started -> in_progress saat soal dibuka.
+        if ($p->status === 'not_started') {
+            $p->status = 'in_progress';
+            $p->started_at ??= now();
+        } elseif ($p->status === 'started' && $p->started_at === null) {
+            $p->started_at = now();
+        }
+        $p->save();
+
+        // Timer: remaining_seconds bila ada, else 60 menit dari started_at.
+        $elapsed = $p->started_at ? (int) now()->diffInSeconds($p->started_at) : 0;
+        $elapsed = max(0, $elapsed);
+        $secondsLeft = $p->remaining_seconds ?? max(0, 3600 - $elapsed);
 
         $questions = $p->examSession ? $p->examSession->questions : collect();
+        $ordered = $this->shuffled($questions->all(), (int) $p->order_seed);
 
-        return view('student.exam-take', ['progress' => $p, 'secondsLeft' => $secondsLeft, 'questions' => $questions]);
+        // Acak opsi pg/pg_kompleks per soal (seed + question_id agar stabil per soal).
+        foreach ($ordered as $q) {
+            $type = $q->type instanceof QuestionType ? $q->type->value : (string) $q->type;
+            if (in_array($type, ['pg', 'pg_kompleks'], true) && is_array($q->options)) {
+                $q->setAttribute('options', $this->shuffled(
+                    array_values($q->options),
+                    (int) $p->order_seed + (int) $q->id
+                ));
+            }
+        }
+
+        return view('student.exam-take', ['progress' => $p, 'secondsLeft' => $secondsLeft, 'questions' => collect($ordered)]);
     }
 
     public function submit(Request $request, int $progress): RedirectResponse
@@ -59,7 +99,7 @@ class ExamController extends Controller
             abort(403, 'Token sesi tidak valid.');
         }
 
-        if ($p->status !== 'finished') {
+        if (! in_array($p->status, ['finished', 'late'], true)) {
             $raw = $request->input('answers', []);
             $answers = is_array($raw) ? $raw : [];
             $questions = $p->examSession ? $p->examSession->questions : collect();
@@ -75,10 +115,41 @@ class ExamController extends Controller
                 );
             }
 
-            $p->update(['status' => 'finished', 'score' => $score, 'finished_at' => now()]);
+            // late bila trlambat (60 menit dari started_at).
+            $elapsed = $p->started_at ? (int) now()->diffInSeconds($p->started_at) : 0;
+            $late = $elapsed > 3600;
+            $p->update([
+                'status' => $late ? 'late' : 'finished',
+                'score' => $score,
+                'finished_at' => now(),
+                'remaining_seconds' => max(0, 3600 - max(0, $elapsed)),
+            ]);
         }
 
         return redirect()->route('student.exam.result', $p->id);
+    }
+
+    /** Daftar kunci: answer_keys_json dulu, fallback answer_key koma. */
+    private function keyList(Question $q): ?array
+    {
+        $raw = $q->answer_keys_json;
+        if (is_string($raw)) {
+            $dec = json_decode($raw, true);
+            if (is_array($dec)) {
+                $raw = array_values($dec);
+            }
+        }
+        if (is_array($raw)) {
+            $list = array_values(array_filter(array_map(
+                fn ($v) => is_array($v) ? json_encode(array_values($v)) : trim((string) $v),
+                $raw
+            ), fn ($v) => $v !== ''));
+            if ($list !== []) {
+                return $list;
+            }
+        }
+
+        return null;
     }
 
     /** @return array{bool,int,?string} */
@@ -88,12 +159,16 @@ class ExamController extends Controller
         $key = (string) ($q->answer_key ?? '');
 
         if (is_array($given)) {
-            $set = array_values(array_filter(array_map(
+            $vals = array_values($given);
+            $list = array_values(array_filter(array_map(
                 fn ($v) => trim((string) $v),
-                $given
+                $vals
             ), fn ($v) => $v !== ''));
-            sort($set);
-            $stored = $set === [] ? null : implode(',', $set);
+            if ($type === 'pg_kompleks') {
+                sort($list);
+            }
+            $stored = $list === [] ? null : ($type === 'menjodohkan' ? json_encode($list) : implode(',', $list));
+            $set = $list;
         } else {
             $stored = $given === null || trim((string) $given) === '' ? null : trim((string) $given);
             $set = null;
@@ -101,18 +176,30 @@ class ExamController extends Controller
 
         $correct = false;
         if ($type === 'pg') {
-            $correct = $stored !== null && $stored === trim($key);
+            $keys = $this->keyList($q) ?? ($key === '' ? [] : [trim($key)]);
+            $correct = $stored !== null && in_array($stored, $keys, true);
         } elseif ($type === 'isian_singkat') {
-            $correct = $stored !== null && mb_strtolower($stored) === mb_strtolower(trim($key));
+            $keys = $this->keyList($q) ?? ($key === '' ? [] : [trim($key)]);
+            $low = array_map(fn ($v) => mb_strtolower(trim((string) $v)), $keys);
+            $correct = $stored !== null && in_array(mb_strtolower($stored), $low, true);
         } elseif ($type === 'pg_kompleks') {
-            $keySet = array_values(array_filter(array_map(
+            $keys = $this->keyList($q) ?? array_values(array_filter(array_map(
                 fn ($v) => trim((string) $v),
                 explode(',', $key)
             ), fn ($v) => $v !== ''));
-            sort($keySet);
-            $correct = $set !== null && $set === $keySet && $set !== [];
+            sort($keys);
+            $correct = $set !== null && $set === $keys && $set !== [];
+        } elseif ($type === 'menjodohkan') {
+            $keys = $this->keyList($q) ?? array_values(array_filter(array_map(
+                fn ($v) => trim((string) $v),
+                explode(',', $key)
+            ), fn ($v) => $v !== ''));
+            // Urutan penting; banding case-insensitive per baris.
+            $norm = fn ($v) => mb_strtolower(trim((string) $v));
+            $correct = $set !== null && $set !== []
+                && array_map($norm, $set) === array_map($norm, $keys);
         }
-        // essay/menjodohkan: tetap 0, butuh koreksi manual.
+        // essay: tetap 0, butuh koreksi manual.
 
         return [$correct, $correct ? (int) $q->points : 0, $stored];
     }

@@ -6,9 +6,11 @@ namespace App\Filament\Imports;
 
 use App\Enums\QuestionType;
 use App\Models\Question;
+use App\Models\Subject;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
+use Illuminate\Support\Str;
 
 class QuestionImporter extends Importer
 {
@@ -40,6 +42,11 @@ class QuestionImporter extends Importer
                 ->label('Kunci Jawaban')
                 ->rules(['nullable', 'string', 'max:255'])
                 ->ignoreBlankState(true),
+            ImportColumn::make('subject_code')
+                ->label('Kode Mapel')
+                ->rules(['nullable', 'string', 'max:10'])
+                ->ignoreBlankState(true)
+                ->fillRecordUsing(static fn () => null),
             // ponytail: kolom virtual, resolveRecord() isi manual; tambah cast array bila format berubah.
             ImportColumn::make('options_json_format')
                 ->label('Format Opsi JSON')
@@ -54,6 +61,10 @@ class QuestionImporter extends Importer
             'content' => trim($this->data['content'] ?? ''),
         ]);
 
+        $code = Str::upper(trim((string) ($this->data['subject_code'] ?? '')));
+        $question->subject_id = $code === ''
+            ? null
+            : Subject::firstOrCreate(['code' => $code], ['name' => $code])->id;
         $question->stimulus = $this->data['stimulus'] ?? null;
         $question->type = $this->data['type'];
         $question->points = (int) ($this->data['points'] ?? 1);

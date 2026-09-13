@@ -1,0 +1,1 @@
+<!DOCTYPE html><html><head><meta charset='utf-8'><title>Daftar Hadir</title></head><body><h1>Daftar Hadir</h1><table border='1' cellpadding='6'><tr><th>No</th><th>Nama</th><th>TTD</th></tr><tr><td>1</td><td></td><td></td></tr></table></body></html>

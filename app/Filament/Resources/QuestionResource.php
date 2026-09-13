@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use AmidEsfahani\FilamentTinyEditor\TinyEditor;
+use App\Enums\QuestionType;
 use App\Filament\Resources\QuestionResource\Pages;
 use App\Models\Question;
 use BackedEnum;
@@ -48,6 +49,18 @@ class QuestionResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
+            Section::make('Stimulus / Bacaan')
+                ->description('Teks bacaan, gambar, atau konteks AKM. Kosongkan bila soal tanpa stimulus.')
+                ->components([
+                    TinyEditor::make('stimulus')
+                        ->label('Stimulus')
+                        ->nullable()
+                        ->columnSpanFull()
+                        ->profile('default')
+                        ->language('id')
+                        ->maxLength(10000),
+                ]),
+
             Section::make('Isi Soal & Pertanyaan')
                 ->description(
                     'Tuliskan soal di sini. Gunakan tombol berlogo akar (√x) untuk memasukkan rumus matematika visual.',
@@ -66,13 +79,7 @@ class QuestionResource extends Resource
                 ->components([
                     Select::make('type')
                         ->label('Tipe Soal AKM')
-                        ->options([
-                            'pg' => 'Pilihan Ganda',
-                            'pg_kompleks' => 'Pilihan Ganda Kompleks',
-                            'isian_singkat' => 'Isian Singkat',
-                            'essay' => 'Essay/Uraian',
-                            'menjodohkan' => 'Menjodohkan',
-                        ])
+                        ->options(collect(QuestionType::cases())->mapWithKeys(fn (QuestionType $c): array => [$c->value => $c->label()]))
                         ->required()
                         ->live()
                         ->native(false),
@@ -143,6 +150,7 @@ class QuestionResource extends Resource
                 Tables\Columns\TextColumn::make('type')
                     ->label('Tipe')
                     ->badge()
+                    ->formatStateUsing(fn ($state): string => $state instanceof QuestionType ? $state->label() : (string) $state)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('content')
                     ->label('Pertanyaan')

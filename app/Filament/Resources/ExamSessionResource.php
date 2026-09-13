@@ -110,7 +110,18 @@ class ExamSessionResource extends Resource
                     }
                 }),
             ])
-            ->bulkActions([BulkActionGroup::make([DeleteBulkAction::make()])]);
+            ->bulkActions([BulkActionGroup::make([
+                DeleteBulkAction::make()->before(function ($action, $records) {
+                    if ($records->contains(fn ($record) => $record->classrooms()->exists())) {
+                        Notification::make()
+                            ->warning()
+                            ->title('Sesi masih dipakai')
+                            ->body('Hapus/batalkan alokasi kelas dulu sebelum hapus sesi ini.')
+                            ->send();
+                        $action->halt();
+                    }
+                }),
+            ])]);
     }
 
     public static function getPages(): array

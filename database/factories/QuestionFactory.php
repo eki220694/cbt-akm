@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enums\QuestionType;
 use App\Models\Question;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -15,7 +16,7 @@ class QuestionFactory extends Factory
     {
         return [
             'content' => $this->faker->sentence(),
-            'type' => 'pg',
+            'type' => QuestionType::Pg,
             'points' => 1,
             'answer_key' => 'A',
             'options' => [['key' => 'A', 'value' => '4'], ['key' => 'B', 'value' => '5']],

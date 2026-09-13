@@ -16,12 +16,15 @@ class QuestionExporter extends Exporter
     public static function getColumns(): array
     {
         return [
-            // ponytail: nama kolom disamakan dgn importer+template agar round-trip; tambah formatStateUsing bila perlu sanitasi formula.
+            ExportColumn::make('stimulus')->label('Stimulus/Bacaan'),
             ExportColumn::make('content')->label('Butir Soal'),
             ExportColumn::make('type')->label('Tipe Soal'),
             ExportColumn::make('points')->label('Bobot Nilai'),
             ExportColumn::make('answer_key')->label('Kunci Jawaban'),
-            ExportColumn::make('options')->label('Format Opsi JSON'),
+            ExportColumn::make('options_json_format')
+                ->label('Format Opsi JSON')
+                ->state(fn (Question $record): mixed => $record->options)
+                ->formatStateUsing(fn ($state): ?string => is_array($state) ? json_encode($state) : $state),
         ];
     }
 

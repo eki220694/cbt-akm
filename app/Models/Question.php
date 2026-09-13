@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\QuestionType;
 use Database\Factories\QuestionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Question extends Model
 {
@@ -27,9 +29,15 @@ class Question extends Model
         return QuestionFactory::new();
     }
 
+    public function examSessions(): BelongsToMany
+    {
+        return $this->belongsToMany(ExamSession::class);
+    }
+
     protected function casts(): array
     {
         return [
+            'type' => QuestionType::class,
             'options' => 'array',
             'points' => 'integer',
         ];

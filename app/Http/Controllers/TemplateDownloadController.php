@@ -67,6 +67,7 @@ class TemplateDownloadController extends Controller
                 'template_soal_akm.xlsx',
             )
                 ->addHeader([
+                    'stimulus',
                     'content',
                     'type',
                     'points',
@@ -74,6 +75,7 @@ class TemplateDownloadController extends Controller
                     'options_json_format',
                 ])
                 ->addRow([
+                    'stimulus' => 'Bacalah teks berikut: Air mendidih pada suhu 100°C.',
                     'content' => 'Berapakah hasil dari 2 + 2?',
                     'type' => 'pg',
                     'points' => 1,
@@ -81,6 +83,7 @@ class TemplateDownloadController extends Controller
                     'options_json_format' => '[{"key":"A","value":"4"},{"key":"B","value":"5"}]',
                 ])
                 ->addRow([
+                    'stimulus' => null,
                     'content' => 'Jelaskan dampak pemanasan global bagi pertanian Sigi!',
                     'type' => 'essay',
                     'points' => 2,

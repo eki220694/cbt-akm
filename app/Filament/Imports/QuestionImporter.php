@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Imports;
 
+use App\Enums\QuestionType;
 use App\Models\Question;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
@@ -20,12 +21,16 @@ class QuestionImporter extends Importer
                 ->label('Butir Soal')
                 ->requiredMapping()
                 ->rules(['required']),
+            ImportColumn::make('stimulus')
+                ->label('Stimulus/Bacaan')
+                ->rules(['nullable', 'string'])
+                ->ignoreBlankState(true),
             ImportColumn::make('type')
                 ->label('Tipe Soal')
                 ->requiredMapping()
                 ->rules([
                     'required',
-                    'in:pg,pg_kompleks,isian_singkat,essay,menjodohkan',
+                    'in:'.implode(',', array_map(fn (QuestionType $c): string => $c->value, QuestionType::cases())),
                 ]),
             ImportColumn::make('points')
                 ->label('Bobot Nilai')
@@ -49,6 +54,7 @@ class QuestionImporter extends Importer
             'content' => trim($this->data['content'] ?? ''),
         ]);
 
+        $question->stimulus = $this->data['stimulus'] ?? null;
         $question->type = $this->data['type'];
         $question->points = (int) ($this->data['points'] ?? 1);
         $question->answer_key = $this->data['answer_key'] ?? null;
